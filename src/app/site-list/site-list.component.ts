@@ -7,7 +7,7 @@ import { PasswordManagerServiceService } from '../password-manager-service.servi
   templateUrl: './site-list.component.html',
   styleUrls: ['./site-list.component.scss']
 })
-export class SiteListComponent {
+export class SiteListComponent implements OnInit {
 
   allSites!: Observable<Array<any>>
 
@@ -18,11 +18,12 @@ export class SiteListComponent {
 
   formState: string = 'Add New'
 
-  constructor(private passwordManagerService: PasswordManagerServiceService) {
+  constructor(private passwordManagerService: PasswordManagerServiceService) { }
+  ngOnInit(): void {
     this.loadSites()
   }
 
-  onSubmit(values: object,) {
+  onSubmit(values: object) {
     if (this.formState === "Add New") {
       this.passwordManagerService.addSite(values).then(() => {
         console.log('Data saved successfully')
@@ -37,6 +38,7 @@ export class SiteListComponent {
       })
     }
 
+
   }
 
   loadSites() {
@@ -49,6 +51,14 @@ export class SiteListComponent {
     this.siteId = siteId
     this.siteURL = siteURL
     this.siteImgUrl = siteImgUrl
+  }
+
+  deleteSite(id: string) {
+    this.passwordManagerService.deleteSite(id).then(() => {
+      console.log("successfully Deleted the post");
+    }).catch((e) => {
+      console.log(e.message)
+    })
   }
 
 
