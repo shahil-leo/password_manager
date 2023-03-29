@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { PasswordManagerServiceService } from '../password-manager-service.service';
 
 @Component({
   selector: 'app-site-list',
@@ -6,5 +8,48 @@ import { Component } from '@angular/core';
   styleUrls: ['./site-list.component.scss']
 })
 export class SiteListComponent {
+
+  allSites!: Observable<Array<any>>
+
+  siteName!: string
+  siteURL!: string
+  siteImgUrl!: string
+  siteId!: string
+
+  formState: string = 'Add New'
+
+  constructor(private passwordManagerService: PasswordManagerServiceService) {
+    this.loadSites()
+  }
+
+  onSubmit(values: object,) {
+    if (this.formState === "Add New") {
+      this.passwordManagerService.addSite(values).then(() => {
+        console.log('Data saved successfully')
+      }).catch((error) => {
+        console.log('Error')
+      })
+    } else if (this.formState === 'Edit') {
+      this.passwordManagerService.updateDoc(this.siteId, values).then(() => {
+        console.log("Data updated")
+      }).catch((error) => {
+        console.log(error)
+      })
+    }
+
+  }
+
+  loadSites() {
+    this.allSites = this.passwordManagerService.loadSites()
+  }
+
+  editSite(siteName: string, siteURL: string, siteImgUrl: string, siteId: string) {
+    this.formState = 'Edit'
+    this.siteName = siteName
+    this.siteId = siteId
+    this.siteURL = siteURL
+    this.siteImgUrl = siteImgUrl
+  }
+
 
 }

@@ -1,1 +1,94 @@
-<p>site-list works!</p>
+<div class="container mx-auto my-16">
+  <h1 class="mt-0 mb-5 text-5xl">PASSWORD</h1>
+  <p class="mb-5">
+    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Odit provident
+    exercitationem totam deleniti quidem error eum accusamus nobis. Officia
+    consectetur inventore unde esse voluptates fugit possimus saepe repudiandae
+    quaerat eum?
+  </p>
+  <button
+    class="mb-5 mx-0.5 px-5 py-3 text-sm bg-gray-900 text-white shadow rounded-md"
+  >
+    {{ formState }} Site
+  </button>
+
+  <!-- Add new form -->
+
+  <div class="px-20 py-10 my-5 mb-10 border-4 border-gray-900">
+    <h2 class="text-3xl text-center">{{ formState }} new site</h2>
+    <p class="text-center">Yu can {{ formState }} site from the below form</p>
+    <form #formData="ngForm" (ngSubmit)="onSubmit(formData.value)">
+      <div class="flex flex-col">
+        <label class="mb-2 text-lg font-medium">site name</label>
+        <input
+          [(ngModel)]="siteName"
+          type="text"
+          name="siteName"
+          class="w-full p-2 border-2 border-gray-900 rounded-lg"
+        />
+      </div>
+
+      <div class="flex flex-col">
+        <label class="mb-2 text-lg font-medium">site URL</label>
+        <input
+          [(ngModel)]="siteURL"
+          type="text"
+          name="siteURl"
+          class="w-full p-2 border-2 border-gray-900 rounded-lg"
+        />
+      </div>
+
+      <div class="flex flex-col">
+        <label class="mb-2 text-lg font-medium">site image URL</label>
+        <input
+          [(ngModel)]="siteImgUrl"
+          type="text"
+          name="siteImgUrl"
+          class="w-full p-2 border-2 border-gray-900 rounded-lg"
+        />
+      </div>
+
+      <button
+        class="mt-10 mx-0.5 px-5 py-3 text-sm bg-gray-900 text-white shadow rounded-md"
+      >
+        {{ formState }} Site
+      </button>
+      <button
+        class="mt-10 mx-0.5 px-5 py-3 text-sm bg-gray-900 text-white shadow rounded-md"
+      >
+        Cancel
+      </button>
+    </form>
+  </div>
+
+  <div class="grid grid-cols-4 gap-5">
+    <div
+      *ngFor="let site of allSites | async"
+      class="border-2 border-gray-900 shadow-lg"
+    >
+      <img [src]="site.siteImgUrl" alt="" />
+      <h3 class="p-3 text-xl font-bold">{{ site.siteName }}</h3>
+      <div class="px-3 m-3 text-sm text-blue-800 bg-blue-200 rounded-lg w-60">
+        {{ site.siteURl }}
+      </div>
+      <button
+        class="my-3 ml-3 mx-0.5 px-5 py-3 text-sm bg-gray-900 text-white shadow rounded-md"
+      >
+        New Password
+      </button>
+      <button
+        (click)="
+          editSite(site.siteName, site.siteURl, site.siteImgUrl, site.id)
+        "
+        class="my-3 ml-3 mx-0.5 px-5 py-3 text-sm border-2 border-gray-900 text-gray-900 shadow rounded-md"
+      >
+        Edit
+      </button>
+      <button
+        class="my-3 ml-3 mx-0.5 px-5 py-3 text-sm border-2 border-gray-900 text-gray-900 shadow rounded-md"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
