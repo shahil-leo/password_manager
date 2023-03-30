@@ -23,7 +23,10 @@ export class PasswordListComponent {
   passwordList!: Observable<Array<any>>
   FormState: string = 'Add New'
 
-  constructor(private route: ActivatedRoute, private passwordManagerService: PasswordManagerServiceService) {
+  constructor(
+    private route: ActivatedRoute,
+    private passwordManagerService: PasswordManagerServiceService,
+  ) {
 
     this.route.queryParams.subscribe((value: any) => {
       this.siteId = value.id
@@ -46,7 +49,6 @@ export class PasswordListComponent {
     if (this.FormState === 'Add New') {
       this.passwordManagerService.addPassword(Data, this.siteId).then(() => {
         this.resetForm()
-        console.log("successfully added the password")
       }).catch((e) => {
         console.log(e.message)
       })
@@ -58,6 +60,7 @@ export class PasswordListComponent {
         console.log(e)
       })
     }
+
 
   }
 
