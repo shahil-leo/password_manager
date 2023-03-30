@@ -17,8 +17,15 @@ export class SiteListComponent implements OnInit {
   siteId!: string
 
   formState: string = 'Add New'
-
+  isSuccess: boolean = false
+  successMessage!: string
   constructor(private passwordManagerService: PasswordManagerServiceService) { }
+
+  showAlert(message: string) {
+    this.isSuccess = true
+    this.successMessage = message
+  }
+
   ngOnInit(): void {
     this.loadSites()
   }
@@ -26,13 +33,13 @@ export class SiteListComponent implements OnInit {
   onSubmit(values: object) {
     if (this.formState === "Add New") {
       this.passwordManagerService.addSite(values).then(() => {
-        console.log('Data saved successfully')
+        this.showAlert("Data added successfully")
       }).catch((error) => {
         console.log('Error')
       })
     } else if (this.formState === 'Edit') {
       this.passwordManagerService.updateDoc(this.siteId, values).then(() => {
-        console.log("Data updated")
+        this.showAlert("Data updated successfully")
       }).catch((error) => {
         console.log(error)
       })
@@ -55,7 +62,7 @@ export class SiteListComponent implements OnInit {
 
   deleteSite(id: string) {
     this.passwordManagerService.deleteSite(id).then(() => {
-      console.log("successfully Deleted the post");
+      this.showAlert("Data Deleted successfully")
     }).catch((e) => {
       console.log(e.message)
     })

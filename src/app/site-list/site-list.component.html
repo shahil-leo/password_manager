@@ -9,8 +9,12 @@
   <button
     class="mb-5 mx-0.5 px-5 py-3 text-sm bg-gray-900 text-white shadow rounded-md"
   >
-    {{ formState }} Site
+    Add New Site
   </button>
+  <!-- alert -->
+  <div *ngIf="isSuccess" class="p-5 my-3 text-teal-900 bg-teal-100">
+    {{ successMessage }}
+  </div>
 
   <!-- Add new form -->
 
