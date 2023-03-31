@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { PasswordManagerServiceService } from '../password-manager-service.service';
+import { AES, enc } from 'crypto-js';
 
 @Component({
   selector: 'app-password-list',
@@ -20,14 +21,13 @@ export class PasswordListComponent {
   Password!: string
   passId!: string
 
-  passwordList!: Observable<Array<any>>
+  passwordList!: Array<any>
   FormState: string = 'Add New'
 
   constructor(
     private route: ActivatedRoute,
     private passwordManagerService: PasswordManagerServiceService,
   ) {
-
     this.route.queryParams.subscribe((value: any) => {
       this.siteId = value.id
       this.siteImgURL = value.siteImgUrl
@@ -45,7 +45,13 @@ export class PasswordListComponent {
     this.FormState = "Add New"
   }
 
-  submitForm(Data: object) {
+  submitForm(Data: any) {
+    console.log(Data);
+
+    const encryptedPassword = this.encryptPassword(Data.password)
+    Data.password = encryptedPassword
+    console.log(Data);
+
     if (this.FormState === 'Add New') {
       this.passwordManagerService.addPassword(Data, this.siteId).then(() => {
         this.resetForm()
@@ -61,12 +67,12 @@ export class PasswordListComponent {
       })
     }
 
-
   }
 
-
   loadPassword() {
-    this.passwordList = this.passwordManagerService.loadPassword(this.siteId)
+    this.passwordManagerService.loadPassword(this.siteId).subscribe((value) => {
+      this.passwordList = value
+    })
   }
   editPassword(email: string, username: string, password: string, id: string) {
     this.passEmail = email
@@ -80,5 +86,22 @@ export class PasswordListComponent {
       console.log("deleted the password")
     })
   }
+
+  encryptPassword(password: string) {
+    const secretKey = 'TjWnZr4u7x!A%D*F-JaNdRgUkXp2s5v8'
+    const encryptPassword = AES.encrypt(password, secretKey).toString()
+    return encryptPassword
+  }
+  decryptPassword(password: string) {
+    const secretKey = 'TjWnZr4u7x!A%D*F-JaNdRgUkXp2s5v8'
+    const decryptPassword = AES.decrypt(password, secretKey).toString(enc.Utf8)
+    return decryptPassword
+  }
+
+  onDecrypt(password: string, i: number) {
+    const decryptPassword = this.decryptPassword(password)
+    this.passwordList[i].password = decryptPassword
+  }
+
 
 }
